@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <!-- Meta tags for social media banners, these should be filled in appropriately as they are your "business card" -->
+  <!-- Replace the content tag with appropriate information -->
+  <meta name="description" content="Can Text-to-Video Generation help Video-Language Alignment? Accepted to CVPR 2025.">
+  <meta property="og:title" content="Can Text-to-Video Generation help Video-Language Alignment?" />
+  <meta property="og:description" content="Learn more about SynViTA, accepted to CVPR 2025." />
+  <meta property="og:url" content="https://lucazanella.github.io/synvita/" />
+  <!-- Path to banner image, should be in the path listed below. Optimal dimenssions are 1200X630-->
+  <meta property="og:image" content="static/images/teaser.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+
+  <meta name="twitter:title" content="Can Text-to-Video Generation help Video-Language Alignment? Accepted to CVPR 2025.">
+  <meta name="twitter:description" content="Can Text-to-Video Generation help Video-Language Alignment?">
+  <!-- Path to banner image, should be in the path listed below. Optimal dimenssions are 1200X600-->
+  <meta name="twitter:image" content="static/images/teaser.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- Keywords for your paper to be indexed by-->
+  <meta name="keywords" content="SynViTA, video-language alignment, text-to-video generation, CVPR 2025">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <title>Can Text-to-Video Generation help Video-Language Alignment?</title>
+  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script src="static/js/bulma-carousel.min.js"></script>
+  <script src="static/js/bulma-slider.min.js"></script>
+  <script src="static/js/index.js"></script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+
+<body>
+
+  <style>
+    .author-block {
+      margin-right: 10px;
+      /* Adjust the value as per your preference */
+    }
+  </style>
+
+  <style>
+    /* Custom CSS for tooltip */
+    .custom-tooltip .tooltip-inner {
+      background-color: #f1f1f1;
+      color: #333333;
+    }
+
+    .custom-tooltip .tooltip.bs-tooltip-top .arrow::before {
+      border-top-color: #f1f1f1;
+    }
+
+    .subtitle {
+      margin-top: 20px;
+      /* max-width: 1000px; */
+      line-height: 1.5;
+      color: #333;
+      font-size: 1.2rem;
+    }
+
+    .videos-overlay-container {
+      position: relative;
+    }
+
+    .description-overlay {
+      text-align: center;
+      margin-bottom: 10px;  /* Push text above the videos */
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: black;
+    }
+
+    .videos-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;  /* Space between videos */
+    }
+
+    .video-wrapper {
+      width: 30%;  /* Make videos uniform in width */
+      height: 200px;  /* Fixed height to enforce cropping */
+      overflow: hidden;  /* Hide overflowing parts for cropping effect */
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;  /* Crop video uniformly */
+      border-radius: 8px;
+    }
+
+    #results-carousel {
+      display: flex;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .item img {
+      width: 80%;
+      height: auto;
+      margin-bottom: 20px;
+      border-radius: 8px;
+    }
+
+  </style>
+
+
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <!-- <h1 class="title is-1 publication-title"><b style="font-size: 64px;">SynViTA</b></h1> -->
+            <h1 class="title is-1 publication-title">Can Text-to-Video Generation help Video-Language Alignment?</h1>
+            <div class="is-size-5 publication-authors">
+              <!-- Paper authors -->
+              <span class="author-block">
+                <a href="https://lucazanella.github.io/" target="_blank">Luca Zanella</a><sup>1</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://mancinimassimiliano.github.io/" target="_blank">Massimiliano Mancini</a><sup>1</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://www.willimenapace.com/" target="_blank">Willi Menapace</a><sup>2</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://stulyakov.com/" target="_blank">Sergey Tulyakov</a><sup>2</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://www.yimingwang.it/" target="_blank">Yiming Wang</a><sup>3</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://eliricci.eu/" target="_blank">Elisa Ricci</a><sup>1,3</sup>
+              </span>
+            </div>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block" style="margin-left: 10px;"></span><sup>1</sup></span> University of Trento
+              <span class="author-block" style="margin-left: 10px;"></span><sup>2</sup></span> Snap Inc.
+              <span class="author-block" style="margin-left: 10px;"></span><sup>3</sup></span> Fondazione Bruno Kessler
+            </div>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block" style="margin-left: 10px;">CVPR 2025
+            </div>
+
+            <div class="column has-text-centered">
+              <!-- <div class="publication-links"> -->
+                   <!-- Arxiv PDF link -->
+                <!-- <span class="link-block">
+                  <a href="" target="_blank"
+                  class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span> -->
+
+            <!-- Github link -->
+            <span class="link-block">
+              <a href="https://github.com/lucazanella/synvita" target="_blank"
+              class="external-link button is-normal is-rounded is-dark">
+              <span class="icon">
+                <i class="fab fa-github"></i>
+              </span>
+              <span>Code</span>
+            </a>
+
+            <!-- ArXiv abstract Link -->
+            <!-- <span class="link-block">
+              <a href="https://arxiv.org/abs/???" target="_blank"
+              class="external-link button is-normal is-rounded is-dark">
+              <span class="icon">
+                <i class="ai ai-arxiv"></i>
+              </span>
+              <span>arXiv</span>
+            </a>
+          </span> -->
+
+          <div style="display: flex; justify-content: center; margin-top: 20px;">
+            <img src="static/images/teaser.png" alt="Banner Image" height="100%" width="75%">
+          </div>
+          <h2 class="subtitle has-text-justified">
+            We study the problem of video-language alignment, i.e., modeling the
+            relationship between video content and text descriptions. Top: current methods
+            use LLM-generated negative captions, which may introduce certain concepts
+            (e.g., <em>wearing a sombrero</em>) only as negatives, as they are not
+            associated with any video. Bottom: we study whether overcoming this issue by
+            pairing negative captions with generated videos can improve video-language
+            alignment.
+          </h2>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Paper abstract -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              Recent video-language alignment models are trained on sets of videos, each with
+              an associated positive caption and a negative caption generated by large
+              language models.
+              A problem with this procedure is that negative captions may introduce
+              linguistic biases, i.e., concepts are seen only as negatives and never
+              associated with a video. While a solution would be to collect videos for the
+              negative captions, existing databases lack the fine-grained variations needed
+              to cover all possible negatives. In this work, we study whether synthetic
+              videos can help to overcome this issue. Our preliminary analysis with multiple
+              generators shows that, while promising on some tasks, synthetic videos harm the
+              performance of the model on others. We hypothesize this issue is linked to
+              noise (semantic and visual) in the generated videos and develop a method,
+              <em>SynViTA</em>, that accounts for those. <em>SynViTA</em> dynamically weights
+              the contribution of each synthetic video based on how similar its target
+              caption is w.r.t the real counterpart. Moreover, a semantic consistency loss
+              makes the model focus on fine-grained differences across captions, rather than
+              differences in video appearance.
+              Experiments show that, on average, <em>SynViTA</em> improves over existing
+              methods on VideoCon test sets and SSv2-Temporal, SSv2-Events, and ATP-Hard
+              benchmarks, being a first promising step for using synthetic videos when
+              learning video-language models.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End paper abstract -->
+
+  <!-- Generated videos -->
+  <section class="hero teaser">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <h2 class="title is-3">Synthetic videos</h2>
+        <div id="results-carousel" class="carousel results-carousel">
+
+          <div class="carousel-item">
+            <div class="videos-overlay-container">
+              <div class="description-overlay">
+                <p><strong>"a man talks about his plate of tacos while wearing a sombrero"</strong></p>
+              </div>
+              <div class="videos-container">
+                <div class="video-wrapper">
+                  <video autoplay controls muted loop>
+                    <source src="videos/cogvideox/msr-vtt_video6323_001.mp4" type="video/mp4">
+                  </video>
+                </div>
+                <div class="video-wrapper">
+                  <video autoplay controls muted loop>
+                    <source src="videos/lavie/msr-vtt_video6323_001.mp4" type="video/mp4">
+                  </video>
+                </div>
+                <div class="video-wrapper">
+                  <video autoplay controls muted loop>
+                    <source src="videos/videocrafter2/msr-vtt_video6323_001.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="carousel-item">
+            <div class="videos-overlay-container">
+              <div class="description-overlay">
+                <p><strong>"A man is trimming the bottom of a palm tree and then climbs it"</strong></p>
+              </div>
+              <div class="videos-container">
+                <div class="video-wrapper">
+                  <video autoplay controls muted loop>
+                    <source src="videos/cogvideox/vatex_5H02ohmoKow_000068_000078_001.mp4" type="video/mp4">
+                  </video>
+                </div>
+                <div class="video-wrapper">
+                  <video autoplay controls muted loop>
+                    <source src="videos/lavie/vatex_5H02ohmoKow_000068_000078_001.mp4" type="video/mp4">
+                  </video>
+                </div>
+                <div class="video-wrapper">
+                  <video autoplay controls muted loop>
+                    <source src="videos/videocrafter2/vatex_5H02ohmoKow_000068_000078_001.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="carousel-item">
+            <div class="videos-overlay-container">
+              <div class="description-overlay">
+                <p><strong>"Man is holding two large dumbbells which he raises up and down in both of his hands."</strong></p>
+              </div>
+              <div class="videos-container">
+                <div class="video-wrapper">
+                  <video autoplay controls muted loop>
+                    <source src="videos/cogvideox/vatex_dXx58z-yq2g_000003_000013_001.mp4" type="video/mp4">
+                  </video>
+                </div>
+                <div class="video-wrapper">
+                  <video autoplay controls muted loop>
+                    <source src="videos/lavie/vatex_dXx58z-yq2g_000003_000013_001.mp4" type="video/mp4">
+                  </video>
+                </div>
+                <div class="video-wrapper">
+                  <video autoplay controls muted loop>
+                    <source src="videos/videocrafter2/vatex_dXx58z-yq2g_000003_000013_001.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <h2 class="subtitle has-text-justified">
+          We propose to leverage negative captions generated by existing models and
+          recent open-source text-to-video generators (i.e., CogVideox, LaVie,
+          VideoCrafter2) to produce the corresponding synthetic videos.
+        </h2>
+      </div>
+    </div>
+  </section>
+  <!-- End generated videos -->
+
+  <!-- Can synthetic videos help VLA? -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <h2 class="title is-3">Can synthetic videos help VLA?</h2>
+        <div style="display: flex; justify-content: center;">
+          <img src="static/images/tab1.png" alt="Banner Image" height="100%" width="75%">
+        </div>
+        <h2 class="subtitle has-text-justified">
+          We first conduct a preliminary study to evaluate whether these generated videos
+          can augment the training set of real videos and enhance performance on various
+          video-related tasks. Our analysis shows that, while adding synthetic videos
+          shows some promise, <em>it does not</em> consistently improve performance on temporally
+          challenging downstream tasks, regardless of the generator.
+        </h2>
+        <div style="display: flex; justify-content: center;">
+          <img src="static/images/tab2.png" alt="Banner Image" height="100%" width="75%">
+        </div>
+        <h2 class="subtitle has-text-justified">
+          We also analyze the effects of different misalignment types (i.e., semantically
+          plausible changes in the video captions) on the generated videos.
+        </h2>
+        <div style="display: flex; justify-content: center;">
+          <img src="static/images/f_Vs_ts_minus_f_Vs_tr_distribution_horizontal.png" alt="Banner Image" height="100%" width="75%">
+        </div>
+        <h2 class="subtitle has-text-justified">
+          We notice that videos generated by, e.g., introducing hallucination into the
+          captions or reversing event order, align more with positive captions than with
+          their target captions. Such noisy supervision signals may lead to ineffective
+          learning, limiting improvements on downstream tasks.
+        </h2>
+      </div>
+    </div>
+  </section>
+  <!-- End Can synthetic videos help VLA? -->
+
+  <!-- Method overview-->
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <h2 class="title is-3">Method overview</h2>
+        <img src="static/images/method.png" alt="Banner Image" height="100%">
+        <h2 class="subtitle has-text-justified">
+          <p>Motivated by these preliminary findings, we argue that, when using synthetic
+            videos for VLA we should account for (i) potential semantic inconsistency
+            between input text and the generated videos and (ii) appearance biases, as
+            synthetic videos may contain artifacts. We design <em>SynViTA</em>, a
+            model-agnostic method that can effectively tackle both challenges.
+            <em>SynViTA</em> addresses the semantic inconsistency problem by making the
+            contribution of each synthetic video in the training objective proportional to
+            their video-text alignment estimates.  Moreover, it accounts for appearance
+            biases via a semantic regularization objective that (i) takes the common parts
+            between the original and negative caption; (ii) encourages the model to focus
+            on semantic changes rather than on the visual appearance difference between
+            synthetic and real videos.</p>
+          <!-- <p>Given a real video \(V^r\) with its description \(t^r\) and a negative caption
+            \(t^s\) (generated by an LLM), we first generate a synthetic video \(V^s\)
+            based on \(t^s\). We weigh the importance of each video using the scoring
+            criterion \(\phi\). We also find the shared semantic between \(t^r\) and
+            \(t^s\) using the longest common subsequence, obtaining \(t'\). We train
+            \(f_{\theta}\) to respond with \(\texttt{Yes}\) if the input video matches its
+            description and \(\texttt{No}\) otherwise. Additionally, we encourage the model
+            to focus on the semantic difference between real and synthetic videos, instead
+            of the appearance difference, using their shared semantic (i.e., \(t'\)).</p> -->
+        </h2>
+      </div>
+    </div>
+  </section>
+  <!-- End method overview -->
+
+  <!-- Image carousel -->
+  <section class="section hero is-light">
+    <div class="hero-body">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3">Qualitative Results</h2>
+      <div id="results-carousel" class="carousel results-carousel">
+      <div class="item">
+        <!-- Your image here -->
+        <img src="static/images/videocon_human.png" alt="Image showing video-language alignment scores for the video-language entailment task on VideoCon Human and VideoCon Human Hard using SynViTA."/>
+        <h2 class="subtitle has-text-centered">
+          Examples of video-language alignment scores assigned by <em>SynViTA</em>
+          (mPLUG-Owl 7B) and <em>SynViTA</em> (Video-LLaVA), compared to baselines
+          trained without synthetic videos, on the video-language entailment task for
+          VideoCon Human and VideoCon Human Hard.
+        </h2>
+      </div>
+      <div class="item">
+        <!-- Your image here -->
+        <img src="static/images/atphard.png" alt="Image showing video-language alignment scores for the video question answering task on ATP-Hard using SynViTA."/>
+        <h2 class="subtitle has-text-centered">
+          Examples of video-language alignment scores assigned by <em>SynViTA</em>
+          (mPLUG-Owl 7B) and <em>SynViTA</em> (Video-LLaVA), compared to baselines
+          trained without synthetic videos, on the video question answering task on
+          ATP-Hard.
+        </h2>
+      </div>
+      <div class="item">
+        <!-- Your image here -->
+        <img src="static/images/ssv2_events_mplugowl.png" alt="Image showing rankings based on video-language alignment scores for the text-to-video retrieval task on SSv2-Events using SynViTA (mPLUG-Owl 7B)."/>
+        <h2 class="subtitle has-text-centered">
+          Rankings based on video-language alignment scores for the text-to-video
+          retrieval task on SSv2-Events, using <em>SynViTA</em> (mPLUG-Owl 7B) against
+          baselines trained without synthetic videos.
+      </h2>
+    </div>
+    <div class="item">
+      <!-- Your image here -->
+      <img src="static/images/ssv2_temporal_videollava.png" alt="Image showing rankings based on video-language alignment scores for the text-to-video retrieval task on SSv2-Temporal using SynViTA (Video-LLaVA)."/>
+      <h2 class="subtitle has-text-centered">
+          Rankings based on video-language alignment scores for the text-to-video
+          retrieval task on SSv2-Temporal, using <em>SynViTA</em> (Video-LLaVA) against
+          baselines trained without synthetic videos.
+      </h2>
+      </div>
+    </div>
+  </div>
+  </div>
+  </section>
+  <!-- End image carousel -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+
+  <script>
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+  </script>
+
+
+  <footer class="footer">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+
+            <p>
+              This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template"
+                target="_blank">Academic Project Page Template</a>.
+              You are free to borrow the code of this website, we just ask that you link back to this page in the footer.
+              <br> This website is licensed under a <a rel="license"
+                href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative
+                Commons Attribution-ShareAlike 4.0 International License</a>.
+            </p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+
+  <!-- Statcounter tracking code -->
+  <!-- You can add a tracker to track page visits by creating an account at statcounter.com -->
+  <!-- End of Statcounter Code -->
+
+</body>
+
+</html>

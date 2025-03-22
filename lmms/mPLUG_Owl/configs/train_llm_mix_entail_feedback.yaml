@@ -1,0 +1,6 @@
+data_dir: "<REPLACE_WITH_DATASET_DIR>"
+features_dir: "<REPLACE_WITH_FEATURES_DIR>"
+data_files:
+  - data/train_llm_mix_entail_feedback.csv
+  - data/val_llm_mix_entail_feedback.csv
+pretrained_ckpt: "<REPLACE_WITH_CHECKPOINTS_DIR>/MAGAer13/mplug-owl-llama-7b-video
