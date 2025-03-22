@@ -1,5 +1,7 @@
 <div align="center">
 
+[![Website](https://img.shields.io/badge/website-SynViTA-4285F4.svg)](https://lucazanella.github.io/synvita/)
+
 # Can Text-to-Video Generation help Video-Language Alignment?
 
 [Luca Zanella](https://lucazanella.github.io/), [Massimiliano Mancini](https://mancinimassimiliano.github.io/), [Willi Menapace](https://www.willimenapace.com/), [
