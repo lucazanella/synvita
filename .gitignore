@@ -26,5 +26,4 @@ datasets/
 debug/
 logs/
 scripts/
-slurm/
 wandb/
