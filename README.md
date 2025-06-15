@@ -66,7 +66,7 @@ cd "${PROJECT_ROOT}"
 
 ## Pretrained checkpoints
 
-Our fine-tuned [mPLUG-Owl](lucazanella/mplug-owl-llama-7b-video-lora_train_llm_mix_entail_feedback_cogvideox) and [Video-LLaVA](lucazanella/videollava-7b-lora_train_llm_mix_entail_feedback_cogvideox) models are available on Hugging Face.
+Our fine-tuned [mPLUG-Owl](https://huggingface.co/lucazanella/mplug-owl-llama-7b-video-lora_train_llm_mix_entail_feedback_cogvideox) and [Video-LLaVA](https://huggingface.co/lucazanella/videollava-7b-lora_train_llm_mix_entail_feedback_cogvideox) models are available on Hugging Face.
 
 ## Datasets
 
