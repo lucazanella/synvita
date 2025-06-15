@@ -22,7 +22,7 @@ data_dir="<REPLACE_WITH_DATASET_DIR>"
 input_csv="datasets/eval_ssv2_events_updated.csv"
 model_base="${TRANSFORMERS_CACHE}/models--LanguageBind--Video-LLaVA-7B/snapshots/aecae02b7dee5c249e096dcb0ce546eb6f811806"
 # ckpt="${CKPTS_DIR}/videollava-7b-lora_train_llm_mix_entail_feedback/checkpoint-5182/"
-ckpt="${CKPTS_DIR}/videollava-7b-lora_train_llm_mix_entail_feedback_cogvideox/checkpoint-5181/"
+ckpt="${CKPTS_DIR}/videollava-7b-lora_train_llm_mix_entail_feedback_cogvideox/checkpoint-10361/"
 
 process_ckpt() {
     batch_size=8
